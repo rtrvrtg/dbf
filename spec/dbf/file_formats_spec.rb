@@ -37,12 +37,6 @@ RSpec.shared_examples_for 'DBF' do
     end
   end
 
-  specify "column lengths should be larger than 0" do
-    table.columns.each do |column|
-      expect(column.length).to be > 0
-    end
-  end
-
   specify "column decimals should be instances of Fixnum" do
     table.columns.each do |column|
       expect(column.decimal).to be_kind_of(Fixnum)

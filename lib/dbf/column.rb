@@ -28,17 +28,16 @@ module DBF
     # @param [String] type
     # @param [Fixnum] length
     # @param [Fixnum] decimal
-    def initialize(table, name, type, length, decimal)
-      @table = table
+    def initialize(name, type, length, decimal, version, encoding)
       @name = clean(name)
       @type = type
-      @length = length
-      @decimal = decimal
-      @version = table.version
-      @encoding = table.encoding
+      @length = length.to_i
+      @decimal = decimal.to_i
+      @version = version
+      @encoding = encoding
 
-      validate_length
-      validate_name
+      # validate_length
+      # validate_name
     end
 
     # Cast value to native type
@@ -144,7 +143,7 @@ module DBF
     end
 
     def clean(value) # nodoc
-      truncated_value = value.strip.partition("\x00").first
+      truncated_value = value.to_s.strip.partition("\x00").first
       truncated_value.gsub(/[^\x20-\x7E]/, '')
     end
 

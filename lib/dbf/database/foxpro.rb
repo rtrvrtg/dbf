@@ -111,15 +111,20 @@ module DBF
     class Table < DBF::Table
       attr_accessor :long_names
 
-      def build_columns # nodoc
+      def columns # nodoc
         columns = super
 
         # modify the column definitions to use the long names as the
         # columnname property is readonly, recreate the column definitions
         columns.map do |column|
           long_name = long_names[columns.index(column)]
-          Column.new(self, long_name, column.type, column.length, column.decimal)
+          Column.new(long_name, column.type, column.length, column.decimal, version, encoding)
         end
+      end
+
+      def clean(value) # nodoc
+        truncated_value = value.to_s.strip.partition("\x00").first
+        truncated_value.gsub(/[^\x20-\x7E]/, '')
       end
     end
   end

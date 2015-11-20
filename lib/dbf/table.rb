@@ -64,7 +64,8 @@ module DBF
     def initialize(data, memo = nil, encoding = nil)
       @data = open_data(data)
       @data.rewind
-      @header = Header.new(@data.read DBF_HEADER_SIZE)
+
+      @header = Binary::Header.read(@data)
       @encoding = encoding || header.encoding
       @memo = open_memo(data, memo)
       yield self if block_given?
@@ -195,7 +196,13 @@ module DBF
     #
     # @return [Array]
     def columns
-      @columns ||= build_columns
+      @columns ||= begin
+        header.fields.map do |field|
+          unless field.valid?
+            Column.new(field.name, field.field_type, field.field_length, field.decimal, version, encoding)
+          end
+        end.compact
+      end
     end
 
     # Column names
@@ -206,17 +213,6 @@ module DBF
     end
 
     private
-
-    def build_columns # nodoc
-      @data.seek(DBF_HEADER_SIZE)
-      columns = []
-      until end_of_record?
-        column_data = @data.read(DBF_HEADER_SIZE)
-        name, type, length, decimal = column_data.unpack('a10 x a x4 C2')
-        columns << Column.new(self, name, type, length, decimal)
-      end
-      columns
-    end
 
     def end_of_record? # nodoc
       original_pos = @data.pos

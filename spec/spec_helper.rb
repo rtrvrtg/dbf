@@ -11,7 +11,7 @@ require 'fileutils'
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
-  config.warnings = true
+  # config.warnings = true
   config.order = :random
 
   config.expect_with :rspec do |expectations|

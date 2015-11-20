@@ -1,9 +1,13 @@
 require 'date'
-
 require 'csv'
 require 'json'
+require 'bindata'
 
 require 'dbf/schema'
+
+require 'dbf/binary/field'
+require 'dbf/binary/header'
+
 require 'dbf/record'
 require 'dbf/column_type'
 require 'dbf/column'
