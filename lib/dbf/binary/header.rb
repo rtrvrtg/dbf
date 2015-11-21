@@ -20,11 +20,11 @@ module DBF
       skip length: 2                            # byte offset 12-13
       uint8 :incomplete_transaction             # byte offset 14
       uint8 :_encrypted                         # byte offset 15
-      skip :length => 12                        # byte offset 16-27
+      skip length: 12                           # byte offset 16-27
       uint8 :table_flags                        # byte offset 28
       uint8 :code_page_mark                     # byte offset 29
-      skip :length => 2                         # byte offset 30-31 - Reserved
-      array :fields, :type => :field, initial_length: :field_count
+      skip length: 2                            # byte offset 30-31
+      array :fields, type: :field, initial_length: :field_count
 
       def version
         @version ||= _version.to_i.to_s(16).rjust(2, '0')
@@ -32,6 +32,10 @@ module DBF
 
       def encoding_key
         @encoding_key ||= code_page_mark.to_i.to_s(16).rjust(2, '0')
+      end
+
+      def encoding
+        @encoding ||= DBF::ENCODINGS[encoding_key]
       end
 
       def last_update
@@ -44,10 +48,6 @@ module DBF
 
       def field_count
         @field_count ||= ((header_length - FILE_HEADER_SIZE) / FILE_HEADER_SIZE)
-      end
-
-      def encoding
-        @encoding ||= DBF::ENCODINGS[encoding_key]
       end
     end
   end
