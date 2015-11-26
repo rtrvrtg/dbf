@@ -47,7 +47,7 @@ module DBF
       end
 
       def field_count
-        @field_count ||= ((header_length - FILE_HEADER_SIZE) / FILE_HEADER_SIZE)
+        @field_count ||= (header_length - FILE_HEADER_SIZE) / FILE_HEADER_SIZE
       end
     end
   end
