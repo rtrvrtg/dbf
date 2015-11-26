@@ -14,16 +14,34 @@ module DBF
         uint8 :month
         uint8 :day
       end
+
+      # Number of records in file (32-bit number)
       uint32 :record_count                      # byte offset 4-7
+
+      # Number of bytes in header (16-bit number)
       uint16 :header_length                     # byte offset 8-9
+
+      # Number of bytes in record (16-bit number)
       uint16 :record_length                     # byte offset 10-11
+
+      # Reserved, fill with 0x00
       skip length: 2                            # byte offset 12-13
+
+      # dBaseIV flag, incomplete transaction
+      # Begin Transaction sets it to 0x01
+      # End Transaction or RollBack reset it to 0x00
       uint8 :incomplete_transaction             # byte offset 14
+
+      # Encryption flag, encrypted 0x01 else 0x00
       uint8 :_encrypted                         # byte offset 15
+
+      # dBaseIV multi-user environment use
       skip length: 12                           # byte offset 16-27
+
       uint8 :table_flags                        # byte offset 28
       uint8 :code_page_mark                     # byte offset 29
       skip length: 2                            # byte offset 30-31
+
       array :fields, type: :field, initial_length: :field_count
 
       def version
