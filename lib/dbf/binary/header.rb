@@ -28,18 +28,24 @@ module DBF
       skip length: 2                            # byte offset 12-13
 
       # dBaseIV flag, incomplete transaction
-      # Begin Transaction sets it to 0x01
-      # End Transaction or RollBack reset it to 0x00
+      # 0x01 Begin Transaction
+      # 0x00 End Transaction or RollBack
       uint8 :incomplete_transaction             # byte offset 14
 
-      # Encryption flag, encrypted 0x01 else 0x00
+      # Encryption flag
+      # 0x01 Encrypted
+      # 0x00 Not Encrypted
       uint8 :_encrypted                         # byte offset 15
 
       # dBaseIV multi-user environment use
       skip length: 12                           # byte offset 16-27
 
-      uint8 :table_flags                        # byte offset 28
+      # 0x01 Production index exists (only dBase 4/5)
+      # 0x00 Index on demand (all xBase versions)
+      uint8 :table_flag                         # byte offset 28
       uint8 :code_page_mark                     # byte offset 29
+
+      # Reserved, full with 0x00
       skip length: 2                            # byte offset 30-31
 
       array :fields, type: :field, initial_length: :field_count
