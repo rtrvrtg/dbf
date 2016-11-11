@@ -160,7 +160,9 @@ module DBF
     end
 
     def validate_name # nodoc
-      raise NameError, 'column name cannot be empty' if @name.empty?
+      if @name.empty?
+        @name = (0...16).map { (65 + rand(26)).chr }.join
+      end
     end
   end
 end
